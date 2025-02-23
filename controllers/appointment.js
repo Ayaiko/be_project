@@ -1,6 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Appointment = require('../models/Appointment');
-const Hospital = require('../models/Hospital');
+const Hotel = require('../models/Hotel');
 
 //@desc Get all appointment
 //@route Get /api/v1/appointments
