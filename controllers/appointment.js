@@ -11,20 +11,20 @@ exports.getAppointments = async (req, res, next) =>{
     if(req.user.role !== 'admin'){
         //console.log(req.user._id);
         query = Appointment.find({user:req.user.id}).populate({
-            path: 'hospital',
+            path: 'hotel',
             select: 'name province tel'
         });
     }else {//Admin can see all
-        if(req.params.hospitalId){
-            console.log(req.params.hospitalId);
+        if(req.params.hotelId){
+            console.log(req.params.hotelId);
 
-            query = Appointment.find({hospital:req.params.hospitalId}).populate({
-                path: 'hospital',
+            query = Appointment.find({hotel:req.params.hotelId}).populate({
+                path: 'hotel',
                 select: 'name province tel'
             });
         }else {
             query = Appointment.find().populate({
-                path: 'hospital',
+                path: 'hotel',
                 select: 'name province tel'
             });
         }
@@ -52,7 +52,7 @@ exports.getAppointments = async (req, res, next) =>{
 exports.getAppointment = async (req, res, next) => {
     try{
         const appointment = await Appointment.findById(req.params.id).populate({
-            path: 'hospital',
+            path: 'hotel',
             select: 'name province tel'
         })
 
@@ -79,14 +79,23 @@ exports.getAppointment = async (req, res, next) => {
 //@access Public
 exports.addAppointment = async (req, res, next)=>{
     try{
-        console.log(req.body);
-        req.body.hospital=req.params.hospitalId;
+        req.body.hotel=req.params.hotelId;
+        req.body.user = req.user.id;
+        
+        const existedAppointments = await Appointment.find({user:req.user.id});
 
-        const hospital =  await Hospital.findById(req.params.hospitalId);
+        if(existedAppointments.length >= 3 && req.user.role !== 'admin'){
+            return res.status(400).json({success:false, 
+                message: `The user with ID ${req.user.id} has already made 3 appointments`
+            });
+        }
 
-        if(!hospital){
+        console.log(req.params.hotelId);
+        const hotel =  await Hotel.find({hotel:req.params.hotelId});
+
+        if(!hotel){
             return res.status(404).json({success:false, 
-                message: `No hospital with an id of ${req.params.hospitalId}`
+                message: `No hotel with an id of ${req.params.hoId}`
             });
         }
 
@@ -122,7 +131,6 @@ exports.updateAppointment = async (req, res, next)=>{
                 message: `User ${req.user.id} is not authorized to update this appointment`
             });
         }
-
 
 
         appointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
