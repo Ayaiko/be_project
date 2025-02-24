@@ -51,6 +51,12 @@ exports.getAppointments = async (req, res, next) =>{
 //@access Public
 exports.getAppointment = async (req, res, next) => {
     try{
+        if(req.params.id !== req.user.id && req.user.role !== 'admin'){
+            return res.status(401).json({success:false,
+                message: 'User is not authorized to access this appointment'
+            });
+        }
+
         const appointment = await Appointment.findById(req.params.id).populate({
             path: 'hotel',
             select: 'name province tel'
