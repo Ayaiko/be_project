@@ -3,7 +3,7 @@ const Appointment = require('../models/Appointment');
 const Hotel = require('../models/Hotel');
 
 //@desc Get all appointment
-//@route Get /api/v1/appointments
+//@route Get /api/appointments
 //@access Public
 exports.getAppointments = async (req, res, next) =>{
     let query;
@@ -47,7 +47,7 @@ exports.getAppointments = async (req, res, next) =>{
 };
 
 //@desc Get single appointment
-//@route Get /api/v1/appointments/:id
+//@route Get /api/appointments/:id
 //@access Public
 exports.getAppointment = async (req, res, next) => {
     try{
@@ -75,7 +75,7 @@ exports.getAppointment = async (req, res, next) => {
 
 
 //@desc Add appointment
-//@route POST /api/v1/appointments
+//@route POST /api/appointments
 //@access Public
 exports.addAppointment = async (req, res, next)=>{
     try{
@@ -114,7 +114,7 @@ exports.addAppointment = async (req, res, next)=>{
 };
 
 //@desc Update appointment
-//@route PUT /api/v1/appointments/:id
+//@route PUT /api/appointments/:id
 //@access Private
 exports.updateAppointment = async (req, res, next)=>{
     try{
@@ -144,7 +144,7 @@ exports.updateAppointment = async (req, res, next)=>{
         });
 
     }catch(err){
-        console.log(error);
+        console.log(err);
         return res.status(500).json({success:false,
             message:"Cannot update Appointment"
         });
@@ -152,7 +152,7 @@ exports.updateAppointment = async (req, res, next)=>{
 };
 
 //@desc Delete appointment
-//@route DELETE /api/v1/appointments/:id
+//@route DELETE /api/appointments/:id
 //@access Private
 exports.deleteAppointment = async (req, res, next)=>{
     try{
@@ -178,7 +178,7 @@ exports.deleteAppointment = async (req, res, next)=>{
         });
 
     }catch(err){
-        console.log(error);
+        console.log(err);
         return res.status(500).json({success:false,
             message:"Cannot delete Appointment"
         });

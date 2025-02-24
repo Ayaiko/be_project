@@ -1,14 +1,15 @@
 const User = require('../models/User');
 
 //@desc     Register user
-//@route    POST /api/v1/auth/register
+//@route    POST /api/auth/register
 //@access   Public
 exports.register = async (req, res, next)=>{
     try{
-        const {name, email, password, role} = req.body;
+        const {name, tel, email, password, role} = req.body;
 
         const user = await User.create({
             name,
+            tel,
             email,
             role,
             password
@@ -26,7 +27,7 @@ exports.register = async (req, res, next)=>{
 }
 
 //@desc Login user
-//@route POST /api/v1/auth/login
+//@route POST /api/auth/login
 //@access Public
 exports.login = async (req, res, next)=>{
     const {email, password} = req.body;
@@ -59,7 +60,29 @@ exports.login = async (req, res, next)=>{
 }
 
 //@desc Get Current Logged in user
-//@route POST /api/v1/auth/me
+//@route POST /api/auth/logout
+//@access Private
+exports.logout = async(req, res, next)=>{
+    try{
+            await User.findByIdAndUpdate(req.user.id, { invalidate_before: new Date()}, {
+                new:true,
+                runValidators: true
+            });
+    
+            res.status(200).json({
+                success:true,
+            });
+    
+        }catch(err){
+            console.log(err);
+            return res.status(500).json({success:false,
+                message:"Cannot log out user"
+            });
+        }
+}
+
+//@desc Get Current Logged in user
+//@route POST /api/auth/me
 //@access Private
 exports.getMe= async(req, res, next)=>{
     const user = await User.findById(req.user.id);

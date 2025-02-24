@@ -22,6 +22,11 @@ exports.protect=async (req, res, next)=>{
 
         req.user = await User.findById(decoded.id);
 
+        // Check if token was issued before the last logout time
+        if (req.user.invalidate_before && decoded.iat * 1000 < req.user.invalidate_before.getTime()) {
+            return res.status(401).json({ message: "Token is invalid (logged out user)" });
+        }
+
         next();
     }catch(err){
         console.log(err.stack);

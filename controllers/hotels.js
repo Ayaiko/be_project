@@ -2,7 +2,7 @@ const Appointment = require('../models/Appointment.js');
 const Hotel = require('../models/Hotel.js');
 const asyncHandler = require('express-async-handler');
 //@desc Get all Hotels
-//@route GET /api/v1/hotels
+//@route GET /api/hotels
 //@access Public
 exports.getHotels= asyncHandler(async (req, res, next)=>{
     try{    
@@ -75,7 +75,7 @@ exports.getHotels= asyncHandler(async (req, res, next)=>{
 });
 
 //@desc Get single Hotels
-//@route GET /api/v1/hotels/:id
+//@route GET /api/hotels/:id
 //@access Public
 exports.getHotel= async (req, res, next)=>{
     try{
@@ -91,11 +91,17 @@ exports.getHotel= async (req, res, next)=>{
     }
 };
 
+//@desc Create single Hotels
+//@route POST /api/hotels
+//@access Public
 exports.createHotel= async (req, res, next)=>{
     const hotel = await Hotel.create(req.body);
     res.status(201).json({success:true, data:hotel});
 };
 
+//@desc Update single Hotels
+//@route PUT /api/hotels
+//@access Public
 exports.updateHotel= async (req, res, next)=>{
     try{
         const hotel = await hotel.findByIdAndUpdate(req.params.id, req.body, {
@@ -114,6 +120,9 @@ exports.updateHotel= async (req, res, next)=>{
     
 };
 
+//@desc Delete single Hotels
+//@route POST /api/hotels
+//@access Public
 exports.deleteHotel= async (req, res, next)=>{
     try{
         const hotel = await Hotel.findByIdAndDelete(req.params.id);

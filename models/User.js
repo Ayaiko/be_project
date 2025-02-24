@@ -7,6 +7,15 @@ const UserSchema=new mongoose.Schema({
         type: String,
         required:[true, 'Please add a name']
     },
+    tel: {
+        type: String,
+        required: [true, 'Please add a phone number'],
+        unique: true,
+        match: [
+            /^\d{10}$/,
+            'Please add a valid phone number (10 digits)'
+        ]
+    },
     email:{
         type: String,
         required:[true, 'Please add an email'],
@@ -32,8 +41,11 @@ const UserSchema=new mongoose.Schema({
     created:{
         type: Date,
         default:Date.now
+    },
+    invalidate_before:{
+        type:Date,
+        default:null
     }
-
 });
 
 //Encrypt password using bcrypt
