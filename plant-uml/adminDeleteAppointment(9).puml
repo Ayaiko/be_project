@@ -1,0 +1,21 @@
+@startuml Admin Delete Hotel Appointment
+
+header Sample VacQ Sequence Diagram
+footer Page %page% of %lastpage%
+title "Admin Delete Hotel Appointment"
+
+participant "Admin" as admin
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<controllers>>\n:admin" as controllersAdmin
+database "<<MongoDB>>\n:appointment" as AppointmentDatabase
+
+== Admin Deletes Appointment ==
+admin -> server ++: req.delete('/api/admin/appointments/{appointmentId}')
+server -> routerAppointments ++: app.use('/api/admin/appointments', adminAppointments)
+routerAppointments -> controllersAdmin ++: deleteAppointment(req.params.appointmentId)
+controllersAdmin -> AppointmentDatabase ++: deleteAppointmentById(req.params.appointmentId)
+AppointmentDatabase --> controllersAdmin --: deletionConfirmation
+controllersAdmin --> admin --: Appointment Deleted (Confirmation)
+
+@enduml

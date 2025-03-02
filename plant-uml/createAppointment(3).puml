@@ -1,0 +1,29 @@
+@startuml User Appointment at Hotel
+
+header Sample VacQ Sequence Diagram
+footer Page %page% of %lastpage%
+title "User Appointment at Hotel"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:hotels" as routerHotels
+participant "<<controllers>>\n:hotel" as controllersHotel
+database "<<MongoDB>>\n:hotel" as HotelsDatabase
+database "<<MongoDB>>\n:appointment" as AppointmentDatabase
+
+== Get Hotel List ==
+client -> server ++: req.get('/api/hotels')
+server -> routerHotels ++: app.use('/api/hotels', hotels)
+routerHotels -> controllersHotel ++: getHotelList()
+controllersHotel -> HotelsDatabase ++: fetchAllHotels()
+HotelsDatabase --> controllersHotel --: hotelList
+controllersHotel --> client --: hotelList (Name, Address, Telephone)
+
+== User Books Appointment ==
+client -> server ++: req.post('/api/appointments', {hotelId, checkInDate, checkOutDate})
+server -> routerHotels ++: app.use('/api/appointments', appointments)
+routerHotels -> controllersHotel ++: bookAppointment(req.body)
+controllersHotel -> AppointmentDatabase ++: createAppointment(req.body)
+AppointmentDatabase --> controllersHotel --: appointmentConfirmation
+controllersHotel --> client --: Appointment Success (Confirmation)
+@enduml

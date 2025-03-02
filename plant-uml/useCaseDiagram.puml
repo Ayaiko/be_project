@@ -1,0 +1,16 @@
+@startuml
+actor User
+actor Admin
+
+User -> (Register)
+User -> (Login)
+User -> (Logout)
+User -> (View hotels)
+User -> (Book a hotel)
+User -> (Update booking)
+User -> (Cancel booking)
+
+Admin -> (Manage hotels)
+Admin -> (View all bookings)
+Admin -> (Manage bookings)
+@enduml
