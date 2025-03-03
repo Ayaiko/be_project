@@ -37,6 +37,11 @@ const HotelSchema = new mongoose.Schema({
     region: {
         type: String,
         required: [true, 'Please add a region']
+    },
+    blacklistedUsers: { 
+        type: [mongoose.Schema.Types.ObjectId],  // Array of ObjectIds
+        ref: 'User', // Optional: If you want to reference the 'User' model
+        default: []  // Default to empty array
     }
 },{
     toJSON: {virtuals:true},

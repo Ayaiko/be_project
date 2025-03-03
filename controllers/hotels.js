@@ -104,7 +104,7 @@ exports.createHotel= async (req, res, next)=>{
 //@access Public
 exports.updateHotel= async (req, res, next)=>{
     try{
-        const hotel = await hotel.findByIdAndUpdate(req.params.id, req.body, {
+        const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         });
@@ -140,3 +140,31 @@ exports.deleteHotel= async (req, res, next)=>{
         res.status(400).json({success:false});
     }
 };
+
+//@desc blacklist user from making appointment
+//@route POST /api/hotel/hotelId/blacklist
+//@access Private
+exports.blacklistUser= async (req, res, next)=>{
+    try{
+        const hotelId = req.params.hotelId;
+        const { userId } = req.body;
+
+        if(!userId)
+            return res.status(400).json({success:false, message: "User ID is required"});
+        
+        const hotel = await Hotel.findByIdAndUpdate(
+            hotelId, 
+            { $addToSet: { blacklistedUsers: userId } }, // Update operation
+            { runValidators: true, new: true } // Options
+        );
+        
+
+        if(!hotel)
+            return res.status(404).json({success:false, message:`There's no hotel with ID ${hotelId}`});
+
+        res.status(200).json({success:true, hotel});
+    } catch(err){
+        console.log(err);
+        res.status(400).json({success:false, err});
+    }
+}

@@ -81,7 +81,7 @@ exports.getAppointment = async (req, res, next) => {
 
 
 //@desc Add appointment
-//@route POST /api/appointments
+//@route POST /api/hotelId/appointments
 //@access Public
 exports.addAppointment = async (req, res, next)=>{
     try{
@@ -96,12 +96,19 @@ exports.addAppointment = async (req, res, next)=>{
             });
         }
 
-        console.log(req.params.hotelId);
-        const hotel =  await Hotel.find({hotel:req.params.hotelId});
+
+        const hotel =  await Hotel.findById(req.params.hotelId);
 
         if(!hotel){
             return res.status(404).json({success:false, 
                 message: `No hotel with an id of ${req.params.hoId}`
+            });
+        }
+
+        if (hotel.blacklistedUsers && hotel.blacklistedUsers.includes(req.user.id)) {
+            return res.status(400).json({
+                success: false,
+                message: `The user with ID ${req.user.id} is blacklisted from this hotel`
             });
         }
 

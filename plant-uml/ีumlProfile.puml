@@ -1,0 +1,55 @@
+@startuml
+package "Hotel Service" {
+
+    class Hotel {
+        name: String
+        address: String
+        district: String
+        province: String
+        postalcode: String
+        tel: String
+        region: String
+    }
+
+    class Hotels {
+        + getHotels(): Hotel
+        + createHotel(): Hotel
+    }
+
+    class HotelResource {
+        + getHotel(): Hotel
+        + updateHotel(): Hotel
+        + deleteHotel(): void
+    }
+
+    class Appointment {
+        apptDate: Date
+        created: Date
+        
+        + getAppointments(): Appointment
+        + addAppointment(): Appointment
+        + updateAppointment(): Appointment
+        + deleteAppointment(): void
+    }
+
+    class User {
+        name: String
+        email: String
+        role: String
+        password: String
+    }
+
+    class Auth {
+        + register(): User
+        + login(): String
+        + getMe(): User
+        + logout(): void
+    }
+
+    Hotels --> Hotel
+    HotelResource --> Hotel
+    Appointment --> Hotel
+    Appointment --> User
+    Auth --> User
+}
+@enduml
