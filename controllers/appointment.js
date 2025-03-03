@@ -51,16 +51,16 @@ exports.getAppointments = async (req, res, next) =>{
 //@access Public
 exports.getAppointment = async (req, res, next) => {
     try{
-        if(req.params.id !== req.user.id && req.user.role !== 'admin'){
-            return res.status(401).json({success:false,
-                message: 'User is not authorized to access this appointment'
-            });
-        }
-
         const appointment = await Appointment.findById(req.params.id).populate({
             path: 'hotel',
             select: 'name province tel'
         })
+
+        if(appointment.user.toString() !== req.user.id && req.user.role !== 'admin'){
+            return res.status(401).json({success:false,
+                message: 'User is not authorized to access this appointment'
+            });
+        }
 
         if(!appointment){
             return res.status(404).json({success:false, 
@@ -95,7 +95,6 @@ exports.addAppointment = async (req, res, next)=>{
                 message: `The user with ID ${req.user.id} has already made 3 appointments`
             });
         }
-
 
         const hotel =  await Hotel.findById(req.params.hotelId);
 
@@ -144,7 +143,6 @@ exports.updateAppointment = async (req, res, next)=>{
                 message: `User ${req.user.id} is not authorized to update this appointment`
             });
         }
-
 
         appointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
             new:true,
