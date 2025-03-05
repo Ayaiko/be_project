@@ -1,55 +1,37 @@
 @startuml
-package "Hotel Service" {
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
 
-    class Hotel {
-        name: String
-        address: String
-        district: String
-        province: String
-        postalcode: String
-        tel: String
-        region: String
+package HotelQ {
+    rectangle "HotelQ Service" <<Application>> as HotelQService {
+        HotelQService : /hotels <<Path>>
     }
 
-    class Hotels {
-        + getHotels(): Hotel
-        + createHotel(): Hotel
+    class Hotels <<Resource>> {
+        + getHotels() : Hotel <<GET>>
+        + createHotel() : Hotel <<POST>>
     }
 
-    class HotelResource {
-        + getHotel(): Hotel
-        + updateHotel(): Hotel
-        + deleteHotel(): void
+    class HotelResource <<Resource>> {
+        + getHotel() : Hotel <<GET>>
+        + updateHotel() : Hotel <<PUT>>
+        + deleteHotel() : void <<DELETE>>
     }
 
-    class Appointment {
-        apptDate: Date
-        created: Date
-        
-        + getAppointments(): Appointment
-        + addAppointment(): Appointment
-        + updateAppointment(): Appointment
-        + deleteAppointment(): void
+    class Hotel <<Representation>> {
+        - name
+        - address
+        - district
+        - province
+        - postalcode
+        - tel
+        - region
     }
 
-    class User {
-        name: String
-        email: String
-        role: String
-        password: String
-    }
-
-    class Auth {
-        + register(): User
-        + login(): String
-        + getMe(): User
-        + logout(): void
-    }
-
-    Hotels --> Hotel
-    HotelResource --> Hotel
-    Appointment --> Hotel
-    Appointment --> User
-    Auth --> User
+    HotelQService --> Hotels
+    Hotels --> HotelResource : "/{hotelId} <<Path>>"
+    HotelResource ..> Hotel : "<<use>>"
 }
 @enduml
