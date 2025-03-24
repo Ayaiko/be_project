@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 //Load env vars
 dotenv.config({path:'./config/config.env'});
@@ -17,6 +18,12 @@ const app = express();
 
 //Body Parser
 app.use(express.json());
+
+//Enable Cors
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 //Cookie Parser
 app.use(cookieParser());
