@@ -21,11 +21,19 @@ exports.getAppointments = async (req, res, next) =>{
             query = Appointment.find({hotel:req.params.hotelId}).populate({
                 path: 'hotel',
                 select: 'name province tel'
+            })
+            .populate({
+                path: 'user',
+                select: 'name'
             });
         }else {
             query = Appointment.find().populate({
                 path: 'hotel',
                 select: 'name province tel'
+            })
+            .populate({
+                path: 'user',
+                select: 'name'
             });
         }
     }
@@ -54,6 +62,10 @@ exports.getAppointment = async (req, res, next) => {
         const appointment = await Appointment.findById(req.params.id).populate({
             path: 'hotel',
             select: 'name province tel'
+        })
+        .populate({
+            path: 'user',
+            select: 'name'
         })
 
         if(!appointment){
